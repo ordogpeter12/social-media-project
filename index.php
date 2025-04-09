@@ -8,7 +8,7 @@
 <body>
     <?php
         include_once "dao/user_dao.php";
-        UserDao::get_instance();
+        UserDao::get_instance()->test_function();
     ?>
 </body>
 </html>
