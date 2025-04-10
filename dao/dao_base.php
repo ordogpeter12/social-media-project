@@ -1,5 +1,5 @@
 <?php
-include_once "config/config_variables.php";
+include_once "../config/config_variables.php";
 abstract class DaoBase
 {
     private static $connection;

@@ -6,7 +6,7 @@ class User
     private string $hashed_password;
     private string $role;
     private DateTime $birthday;
-    public function User(string $name, string $email, string $hashed_password, string $role, DateTime $birthday)
+    public function __construct(string $name, string $email, string $hashed_password, string $role, DateTime $birthday)
     {
         $this->name = $name;
         $this->email = $email;
