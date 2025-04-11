@@ -5,7 +5,8 @@
     {
         private static UserController $instance;
 
-        /*Returns an array of strings with the type of errors. Errors can be given directly to users.*/
+        /*Visszatér egy sztringeket tartalmazó tömbbel, amely a hibák típusait jelöli.
+        A hibák közvetlenül megjeleníthetők a felhasználók számára.*/
         public static function get_instance()
         {
             if(!isset(self::$instance))
@@ -17,18 +18,18 @@
         public function signup($username, $email, $birth_date, $password, $password_again) : array
         {
             $error_messages = [];
-            if(!filter_var($email, FILTER_VALIDATE_EMAIL)) { $error_messages[] = "Give a valid email!"; }
-            if(!empty(UserDao::get_instance()->get_user_by_email($email))) { $error_messages[] = "The email is already associated with an account!"; }
-            if(empty($username) || trim($username) === "") { $error_messages[] = "Give a username!"; }
-            if(!empty(UserDao::get_instance()->get_user_by_name($username))) { $error_messages[] = "This username is occupied!"; }
-            if(empty($password) || trim($password) === "") { $error_messages[] = "Give a password!"; }
-            if($password !== $password_again) { $error_messages[] = "The two password does not match!"; }
-            if(!$this->validate_date($birth_date)) { $error_messages[] = "The date should have 'yyyy-mm-dd' format"; }
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)) { $error_messages[] = "Adj meg egy érvényes email címet!"; }
+            if(!empty(UserDao::get_instance()->get_user_by_email($email))) { $error_messages[] = "Ez az email cím már használatban van!"; }
+            if(empty($username) || trim($username) === "") { $error_messages[] = "Adj meg egy felhasználónevet!"; }
+            if(!empty(UserDao::get_instance()->get_user_by_name($username))) { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
+            if(empty($password) || trim($password) === "") { $error_messages[] = "Adj meg egy jelszót!"; }
+            if($password !== $password_again) { $error_messages[] = "A két jelszó nem egyezik!"; }
+            if(!$this->validate_date($birth_date)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
             if(count($error_messages) === 0)
             {
                 if(!UserDao::get_instance()->signup(new User($username, $email, password_hash($password, PASSWORD_DEFAULT), "u", new DateTime($birth_date))))
                 {
-                    $error_messages[] = "Registration failed for unknown reasons. Try again!";
+                    $error_messages[] = "A regisztráció ismeretlen okoból nem sikerült. Próbáld újra!";
                 }
             }
             return $error_messages;

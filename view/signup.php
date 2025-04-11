@@ -11,25 +11,25 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signin</title>
+    <title>Regisztráció</title>
 </head>
 <body>
     <form action="#" method="POST">
         <fieldset>
-            <legend>Signup</legend>
-            <label>Username: <input type="text" name="name" required></label>
+            <legend>Regisztráció</legend>
+            <label>Felhasználónév: <input type="text" name="name" required></label>
             <br>
             <label>Email: <input type="email" name="email" required></label>
             <br>
-            <label>Date of birth: <input type="text" name="birth_date" placeholder="yyyy-mm-dd" required></label>
+            <label>Születési idő: <input type="text" name="birth_date" placeholder="yyyy-mm-dd" required></label>
             <br>
-            <label>Password: <input type="password" name="password" required></label>
+            <label>Jelszó: <input type="password" name="password" required></label>
             <br>
-            <label>Password again: <input type="password" name="password_again" required></label>
+            <label>Jelszó újra: <input type="password" name="password_again" required></label>
             <br>
             <?php
                 if(isset($error_messages))
@@ -37,9 +37,9 @@
                     Display::print_errors($error_messages);
                 }
             ?>
-            <input type="submit" name="signup" value="Signup">
-            <p>Already have an account?</p>
-            <input type="button" onclick="location.href='login.php'" value="Login">
+            <input type="submit" name="signup" value="Regisztráció">
+            <p>Már van fiókja?</p>
+            <input type="button" onclick="location.href='login.php'" value="Bejelentkezés">
         </fieldset>
     </form>
 

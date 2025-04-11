@@ -24,7 +24,7 @@ abstract class DaoBase
             self::$connection = oci_connect(DataBaseCredentials::$DB_USERNAME, DataBaseCredentials::$DB_PASSWORD, $tns,'UTF8');
             if(!self::$connection)
             {
-                die("Couldn't connect to database!");
+                die("Nem sikerült csatlakozni az adatbázishoz!");
             }
         }
         return self::$connection;
