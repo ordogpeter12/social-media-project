@@ -6,10 +6,10 @@
     if(array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
     if(isset($_POST["login"]))
     {
-        /*Sikeres bejelentkezés esetnén a $_SESSION tömben "user" kulcsal elérhető
+        /*Sikeres bejelentkezés esetnén a $_SESSION tömben "user" kulccsal elérhető
         a bejelentkezett felhasználó User object-je*/
         $error_messages = UserController::get_instance()->login($_POST["email"], $_POST["password"]);
-        if(!count($error_messages)) { header("Location: ../index.php"); }
+        if(!count($error_messages)) { header("Location: profile.php"); }
     }
 ?>
 <!DOCTYPE html>

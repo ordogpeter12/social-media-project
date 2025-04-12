@@ -83,6 +83,64 @@
             }
             return $error_messages;
         }
+        public function update_user(User $user, string $email, string $name, string $birthday, string $password, string $password_again, string $old_password) : array
+        {
+            $error_messages = [];
+            if($user->get_email() !== $email)
+            {
+                if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL))
+                { $error_messages[] = "Adj meg egy érvényes email címet!"; }
+                else if(UserDao::get_instance()->does_user_email_exist($email))
+                { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
+            }
+            if(empty($name) || trim($name) === "")
+            { $error_messages[] = "Adj meg egy új nevet, vagy hagyd meg a régit!"; }
+            else if($name !== $user->get_name())
+            {
+                if(UserDao::get_instance()->does_username_exist($name)) { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
+            }
+            if(empty($password) || trim($password) === "")
+            { $password = $old_password; }
+            else if($password !== $password_again)
+            { $error_messages[] = "Akét jelszó nem egyezik meg!"; }
+            if($_SESSION["user"] === null || !password_verify($old_password, $_SESSION["user"]->get_hashed_password()))
+            { $error_messages[] = "A jelenlegi jelszó helytelen!"; }
+            if(!$this->validate_date($birthday)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
+            if(count($error_messages) === 0)
+            {
+                if(!UserDao::get_instance()->update_user($user->get_email(), $email, $name, $birthday, password_hash($password, PASSWORD_DEFAULT)))
+                {
+                    return ["A felhasználói adatok módosítása ismeretlen okokból nem sikerült!"];
+                }
+                $_SESSION["user"] = UserDao::get_instance()->get_user_by_email($email);
+            }
+            return $error_messages;
+        }
+        public function delete_user(string $email, string $name, string $birthday, string $password, string $old_email, string $old_password) : array
+        {
+            $error_messages = [];
+            if(!password_verify($old_password, $_SESSION["user"]->get_hashed_password()))
+            {
+                $error_messages[] = "A jelszó helytelen!";
+            }
+            if($email !== $old_email || $name !== $_SESSION["user"]->get_name() || $birthday !== $_SESSION["user"]->get_birthday_as_string() || trim($password) !== "")
+            {
+                $error_messages[] = "Biztosan a jó gombot nyomtad meg??";
+            }
+            if(count($error_messages) === 0)
+            {
+                if(UserDao::get_instance()->delete_user($old_email))
+                {
+                    header("Location: logout.php");
+                    die;
+                }
+                else
+                {
+                    $error_messages[] = "A profil törlése ismeretlen okokból meghiúsult!";
+                }
+            }
+            return $error_messages;
+        }
     }
 
 ?>

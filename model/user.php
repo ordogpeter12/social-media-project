@@ -19,6 +19,7 @@ class User
     public function get_hashed_password() : string { return $this->hashed_password; }
     public function get_role() : string { return $this->role; }
     public function get_birthday() : DateTime { return $this->birthday; }
+    public function get_birthday_as_string() : string { return $this->birthday->format("Y-m-d"); }
 
     public function set_name(string $name) : void { $this->name = $name; }
     public function set_email(string $email) : void { $this->email = $email; }
