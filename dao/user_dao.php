@@ -32,27 +32,42 @@ class UserDao extends DaoBase
         oci_free_statement($statement);
         return $is_success;
     }
-    public function get_user_by_email(string $email) : array
+    public function get_user_by_email(string $email) : User|null
     {
-        $query = "SELECT * FROM Felhasznalo WHERE email=:email";
+        $query = "SELECT email, nev, jelszo, szerepkor, 
+        to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
+        FROM Felhasznalo WHERE email=:email";
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":email", $email);
         oci_execute($statement);
         $returnable_array = oci_fetch_array($statement, OCI_ASSOC);
         if($returnable_array === false) { $returnable_array = []; }
         oci_free_statement($statement);
-        return $returnable_array;
+        $birthday = new DateTime();
+        $birthday->createFromFormat("YYYY-MM-DD", $returnable_array["SZULETESI_DATUM"]);
+        return $returnable_array === [] ? null: new User($returnable_array["NEV"],
+        $returnable_array["EMAIL"], $returnable_array["JELSZO"],
+        $returnable_array["SZEREPKOR"], $birthday);
     }
-    public function get_user_by_name(string $name) : array
+    public function does_user_email_exist(string $email) : bool
+    {
+        $query = "SELECT * FROM Felhasznalo WHERE email=:email";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":email", $email);
+        oci_execute($statement);
+        $returnable_bool = oci_fetch($statement);
+        oci_free_statement($statement);
+        return $returnable_bool;
+    }
+    public function does_username_exist(string $name) : bool
     {
         $query = "SELECT * FROM Felhasznalo WHERE nev=:name";
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":name", $name);
         oci_execute($statement);
-        $returnable_array = oci_fetch_array($statement, OCI_ASSOC);
-        if($returnable_array === false) { $returnable_array = []; }
+        $returnable_bool = oci_fetch($statement);
         oci_free_statement($statement);
-        return $returnable_array;
+        return $returnable_bool;
     }
     
 }

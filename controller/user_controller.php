@@ -19,9 +19,9 @@
         {
             $error_messages = [];
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) { $error_messages[] = "Adj meg egy érvényes email címet!"; }
-            if(!empty(UserDao::get_instance()->get_user_by_email($email))) { $error_messages[] = "Ez az email cím már használatban van!"; }
-            if(empty($username) || trim($username) === "") { $error_messages[] = "Adj meg egy felhasználónevet!"; }
-            if(!empty(UserDao::get_instance()->get_user_by_name($username))) { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
+            if(UserDao::get_instance()->does_username_exist($username)) { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
+            if(UserDao::get_instance()->does_user_email_exist($email)) { $error_messages[] = "Ez az email cím már használatban van!"; }
+            if(empty($username) || trim($username) === "") { $error_messages[] = "Adj meg egy felhasználónevet!"; }//
             if(empty($password) || trim($password) === "") { $error_messages[] = "Adj meg egy jelszót!"; }
             if($password !== $password_again) { $error_messages[] = "A két jelszó nem egyezik!"; }
             if(!$this->validate_date($birth_date)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
@@ -67,6 +67,21 @@
             default:
                 return false;
             }
+        }
+
+        public function login(string $email, string $password) : array
+        {
+            $user = UserDao::get_instance()->get_user_by_email($email);
+            $error_messages = [];
+            if($user !== null && password_verify($password, $user->get_hashed_password()))
+            {
+                $_SESSION["user"] = $user;
+            }
+            else
+            {
+                $error_messages[] = "Helytelen email vagy jelszó!";
+            }
+            return $error_messages;
         }
     }
 

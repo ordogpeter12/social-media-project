@@ -2,6 +2,7 @@
     include_once "../controller/user_controller.php";
     include_once "common_display.php";
     include_once "../config/config_variables.php";
+    include_once "../dao/user_dao.php";
     session_start();
     if(array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
     if(isset($_POST["signup"]))
@@ -25,7 +26,7 @@
             <br>
             <label>Email: <input type="email" name="email" required></label>
             <br>
-            <label>Születési idő: <input type="text" name="birth_date" placeholder="yyyy-mm-dd" required></label>
+            <label>Születési idő: <input type="text" name="birth_date" placeholder="éééé-hh-nn" required></label>
             <br>
             <label>Jelszó: <input type="password" name="password" required></label>
             <br>
