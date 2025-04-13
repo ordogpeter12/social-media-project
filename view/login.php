@@ -17,9 +17,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/style.css" rel="stylesheet">
     <title>Bejelentkezés</title>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li class="right_nav"><div class="nav_div" id="nav_current"><p>Bejelentkezés</p></div></li>
+                <li class="right_nav"><a href="signup.php" class="nav_link"><div class="nav_div"><p>Regisztráció</p></div></a></li>
+            </ul>
+        </nav>
+    </header>
     <form action="#" method="POST">
         <fieldset class="user_info">
             <legend>Bejelentkezés</legend>

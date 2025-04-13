@@ -15,12 +15,22 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/style.css" rel="stylesheet">
     <title>Regisztráció</title>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li class="right_nav"><a href="login.php" class="nav_link"><div class="nav_div"><p>Bejelentkezés</p></div></a></li>
+                <li class="right_nav"><div class="nav_div" id="nav_current"><p>Regisztráció</p></div></li>
+            </ul>
+        </nav>
+    </header>
     <form action="#" method="POST">
-        <fieldset>
+        <fieldset class="user_info">
             <legend>Regisztráció</legend>
             <label>Felhasználónév: <input type="text" name="name" required></label>
             <br>

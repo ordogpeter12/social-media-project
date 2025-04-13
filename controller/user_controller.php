@@ -5,8 +5,6 @@
     {
         private static UserController $instance;
 
-        /*Visszatér egy sztringeket tartalmazó tömbbel, amely a hibák típusait jelöli.
-        A hibák közvetlenül megjeleníthetők a felhasználók számára.*/
         public static function get_instance()
         {
             if(!isset(self::$instance))
@@ -15,6 +13,8 @@
             }
             return self::$instance;
         }
+        /*Visszatér egy sztringeket tartalmazó tömbbel, amely a hibák típusait jelöli.
+        A hibák közvetlenül megjeleníthetők a felhasználók számára.*/
         public function signup($username, $email, $birth_date, $password, $password_again) : array
         {
             $error_messages = [];
