@@ -17,7 +17,6 @@
 <html lang="hu">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="../css/style.css" rel="stylesheet">
         <title>Profil</title>
@@ -26,6 +25,7 @@
     <header>
         <nav>
             <ul>
+            <li class="left_nav"><a href="search_friends.php" class="nav_link"><div class="nav_div"><p>Ismerősök keresése</p></div></a></li>
                 <li class="right_nav"><div class="nav_div" id="nav_current"><p>Profil</p></div></li>
             </ul>
         </nav>
