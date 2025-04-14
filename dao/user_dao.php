@@ -28,7 +28,7 @@ class UserDao extends DaoBase
         oci_bind_by_name($statement, ":email", $email);
         oci_bind_by_name($statement, ":password", $password);
         oci_bind_by_name($statement, ":birth_date", $birthday);
-        oci_bind_by_name($statement, "img_path", $user->get_profile_img_path());
+        oci_bind_by_name($statement, ":img_path", $user->get_profile_img_path());
         $is_success = oci_execute($statement);
         oci_free_statement($statement);
         return $is_success;
@@ -41,7 +41,28 @@ class UserDao extends DaoBase
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":email", $email);
         oci_execute($statement);
-        $returnable_array = oci_fetch_array($statement, OCI_ASSOC);
+        $returnable_array = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS);
+        if($returnable_array === false) 
+        {
+            oci_free_statement($statement);
+            return null;
+        }
+        oci_free_statement($statement);
+        $birthday = new DateTime();
+        $birthday = $birthday->createFromFormat("Y-m-d", $returnable_array["SZULETESI_DATUM"]);
+        return new User($returnable_array["NEV"],
+        $returnable_array["EMAIL"], $returnable_array["JELSZO"],
+        $returnable_array["SZEREPKOR"], $birthday, $returnable_array["PROFIL_KEP_UTVONAL"]);
+    }
+    public function get_user_by_name(string $name) : User|null
+    {
+        $query = "SELECT email, nev, jelszo, szerepkor, profil_kep_utvonal, 
+        to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
+        FROM Felhasznalo WHERE nev=:nev";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":nev", $name);
+        oci_execute($statement);
+        $returnable_array = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS);
         if($returnable_array === false) 
         {
             oci_free_statement($statement);

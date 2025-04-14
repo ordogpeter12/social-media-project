@@ -3,6 +3,8 @@
     include_once "common_display.php";
     include_once "../dao/user_dao.php";
     include_once "../controller/user_controller.php";
+    include_once "../dao/friend_dao.php";
+    FriendDao::get_instance()->get_friends_friends("legobatman2@gmail.com");
     if(array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
     if(isset($_POST["login"]))
     {

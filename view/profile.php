@@ -3,7 +3,7 @@
     include_once "../controller/user_controller.php";
     include_once "common_display.php";
     session_start();
-    if(!array_key_exists("user", $_SESSION)) { header("Location: index.php"); }
+    if(!array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
     if(isset($_POST["change"]))
     {
         $error_messages = UserController::get_instance()->update_user($_SESSION["user"], $_POST["email"], $_POST["name"], $_POST["birth_date"], $_POST["password"], $_POST["password_again"], $_POST["old_password"]);
