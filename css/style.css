@@ -90,7 +90,7 @@ input[type="text"]:focus, [type="password"]:focus, [type="email"]:focus, label >
     color: wheat;
     font-weight: 900;
 }
-input[type="submit"], input[type="button"], button {
+input[type="submit"], input[type="button"], button, label[for="image"] {
     background-color: rgba(0, 0, 0, 0);
     color: green;
     border: 3px solid green;
@@ -104,7 +104,7 @@ input[type="submit"], input[type="button"], button {
     margin-bottom: 10px;
     font-weight: 700;
 }
-input[type="submit"]:hover, input[type="button"]:hover, button:hover {
+input[type="submit"]:hover, input[type="button"]:hover, button:hover, label[for="image"]:hover {
     background-color: green;
     color: wheat;
     border: 3px solid green;
@@ -250,4 +250,8 @@ ul {
 }
 .friend_recommendation_scroll_view::-webkit-scrollbar-thumb{
     background-color: yellow;
+}
+label[for="image"] {
+    cursor: pointer;
+    padding: 5px;
 }

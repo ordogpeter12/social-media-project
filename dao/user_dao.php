@@ -17,8 +17,8 @@ class UserDao extends DaoBase
     }
     public function signup(User $user) : bool
     {
-        $query = "INSERT INTO Felhasznalo(nev, email, jelszo, szuletesi_datum)
-                  VALUES (:name, :email, :password, TO_DATE(:birth_date, 'yyyy-mm-dd'))";
+        $query = "INSERT INTO Felhasznalo(nev, email, jelszo, szuletesi_datum, profil_kep_utvonal)
+                  VALUES (:name, :email, :password, TO_DATE(:birth_date, 'yyyy-mm-dd'), :img_path)";
         $statement = oci_parse(parent::get_connection(), $query);
         $username = $user->get_name();
         $email = $user->get_email();
@@ -28,13 +28,14 @@ class UserDao extends DaoBase
         oci_bind_by_name($statement, ":email", $email);
         oci_bind_by_name($statement, ":password", $password);
         oci_bind_by_name($statement, ":birth_date", $birthday);
+        oci_bind_by_name($statement, "img_path", $user->get_profile_img_path());
         $is_success = oci_execute($statement);
         oci_free_statement($statement);
         return $is_success;
     }
     public function get_user_by_email(string $email) : User|null
     {
-        $query = "SELECT email, nev, jelszo, szerepkor, 
+        $query = "SELECT email, nev, jelszo, szerepkor, profil_kep_utvonal, 
         to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
         FROM Felhasznalo WHERE email=:email";
         $statement = oci_parse(parent::get_connection(), $query);
@@ -51,7 +52,7 @@ class UserDao extends DaoBase
         $birthday = $birthday->createFromFormat("Y-m-d", $returnable_array["SZULETESI_DATUM"]);
         return new User($returnable_array["NEV"],
         $returnable_array["EMAIL"], $returnable_array["JELSZO"],
-        $returnable_array["SZEREPKOR"], $birthday);
+        $returnable_array["SZEREPKOR"], $birthday, $returnable_array["PROFIL_KEP_UTVONAL"]);
     }
     public function does_user_email_exist(string $email) : bool
     {
@@ -82,14 +83,15 @@ class UserDao extends DaoBase
         oci_free_statement($statement);
         return $returnable_bool;
     }
-    public function update_user(string $old_email, string $email, string $name, string $birthday, string $hashed_password) : bool
+    public function update_user(string $old_email, string $email, string $name, string $birthday, string $img_path, string $hashed_password) : bool
     {
         $query = "UPDATE Felhasznalo 
-                  SET email=:email, nev=:name, szuletesi_datum=TO_DATE(:birth_date, 'yyyy-mm-dd'), jelszo=:password 
+                  SET email=:email, nev=:name, szuletesi_datum=TO_DATE(:birth_date, 'yyyy-mm-dd'), jelszo=:password, profil_kep_utvonal=:path  
                   WHERE email=:old_email";
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":email", $email);
         oci_bind_by_name($statement, ":name", $name);
+        oci_bind_by_name($statement, ":path", $img_path);
         oci_bind_by_name($statement, ":birth_date", $birthday);
         oci_bind_by_name($statement, ":password", $hashed_password);
         oci_bind_by_name($statement, ":old_email", $old_email);

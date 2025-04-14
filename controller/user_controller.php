@@ -15,7 +15,7 @@
         }
         /*Visszatér egy sztringeket tartalmazó tömbbel, amely a hibák típusait jelöli.
         A hibák közvetlenül megjeleníthetők a felhasználók számára.*/
-        public function signup($username, $email, $birth_date, $password, $password_again) : array
+        public function signup($username, $email, $birth_date, $image, $password, $password_again) : array
         {
             $error_messages = [];
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) { $error_messages[] = "Adj meg egy érvényes email címet!"; }
@@ -25,11 +25,36 @@
             if(empty($password) || trim($password) === "") { $error_messages[] = "Adj meg egy jelszót!"; }
             if($password !== $password_again) { $error_messages[] = "A két jelszó nem egyezik!"; }
             if(!$this->validate_date($birth_date)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
+            $file_name = "";
+            $save_dir = "";
+            if(!empty($image["name"]))
+            {
+                $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));;
+                if($file_extension !== "png" && $file_extension !== "jpg")
+                {
+                    $error_messages[] = "A fájl elfogadott formátumai: .png, .jpg!";
+                }
+                if($image["size"] > 5242880)
+                {
+                    $error_messages[] = "A fájl maximum 5Mb méretű lehet!";
+                }
+                $file_name = time().".".$file_extension;
+                $save_dir = "../assets/".$_POST["email"];
+            }
             if(count($error_messages) === 0)
             {
-                if(!UserDao::get_instance()->signup(new User($username, $email, password_hash($password, PASSWORD_DEFAULT), "u", new DateTime($birth_date))))
+                $saveable_path = $file_name !== "" ? $save_dir."/".$file_name: "";
+                if(!UserDao::get_instance()->signup(new User($username, $email, password_hash($password, PASSWORD_DEFAULT), "u", new DateTime($birth_date), $saveable_path)))
                 {
                     $error_messages[] = "A regisztráció ismeretlen okoból nem sikerült. Próbáld újra!";
+                }
+                else
+                {
+                    mkdir($save_dir);
+                    if($file_name !== "")
+                    {
+                        move_uploaded_file($image["tmp_name"], $saveable_path);
+                    }
                 }
             }
             return $error_messages;
@@ -108,13 +133,24 @@
             if(!$this->validate_date($birthday)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
             if(count($error_messages) === 0)
             {
-                if(!UserDao::get_instance()->update_user($user->get_email(), $email, $name, $birthday, password_hash($password, PASSWORD_DEFAULT)))
+                if(!UserDao::get_instance()->update_user($user->get_email(), $email, $name, $birthday, $this->replace_dir_name($user->get_profile_img_path(), $email), password_hash($password, PASSWORD_DEFAULT)))
                 {
                     return ["A felhasználói adatok módosítása ismeretlen okokból nem sikerült!"];
+                }
+                else if($email !== $user->get_email())
+                {
+                    rename("../assets/".$user->get_email(), "../assets/".$email);
                 }
                 $_SESSION["user"] = UserDao::get_instance()->get_user_by_email($email);
             }
             return $error_messages;
+        }
+        private function replace_dir_name(string $old_path, string $new_email) : string
+        {
+            if($old_path === "../assets/default.png")
+                return $old_path;
+            $path_array = explode("/", $old_path);
+            return "../assets/".$new_email."/".end($path_array);
         }
         public function delete_user(string $email, string $name, string $birthday, string $password, string $old_email, string $old_password) : array
         {

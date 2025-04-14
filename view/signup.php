@@ -7,7 +7,7 @@
     if(array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
     if(isset($_POST["signup"]))
     {
-        $error_messages = UserController::get_instance()->signup($_POST["name"], $_POST["email"], $_POST["birth_date"], $_POST["password"], $_POST["password_again"]);
+        $error_messages = UserController::get_instance()->signup($_POST["name"], $_POST["email"], $_POST["birth_date"], $_FILES["image"], $_POST["password"], $_POST["password_again"]);
         if(!count($error_messages)) { header("Location: login.php"); }
     }
 ?>
@@ -28,7 +28,7 @@
             </ul>
         </nav>
     </header>
-    <form action="#" method="POST">
+    <form action="#" method="POST" enctype="multipart/form-data">
         <fieldset class="user_info">
             <legend>Regisztráció</legend>
             <label>Felhasználónév: <input type="text" name="name" required></label>
@@ -36,6 +36,9 @@
             <label>Email: <input type="email" name="email" required></label>
             <br>
             <label>Születési idő: <input type="text" name="birth_date" placeholder="éééé-hh-nn" required></label>
+            <br>
+            <label for="image">Profil kép(.jpg, .png)</label>
+            <input id="image" type="file" name="image" accept=".png, .jpg" hidden>
             <br>
             <label>Jelszó: <input type="password" name="password" required></label>
             <br>
