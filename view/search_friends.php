@@ -35,90 +35,28 @@
         </nav>
     </header>
     <form action="#" method="GET" id="search_form">
-        <input type="text" id="search_bar" placeholder="Keresés" name="searches_string">
-        <input type="submit" id="search_btn" value="Kereses" name="search">
+        <input type="text" id="search_bar" placeholder="Keresés" name="search">
+        <input type="submit" id="search_btn" value="Kereses" name="search_btn">
     </form>
     <div id="main_recommendation">
         <div class='friend_recommendation_scroll_view'>
         <?php
             Display::list_friend_requests_as_html(
-                FriendController::get_instance()->get_friend_requests($_SESSION["user"]->get_email()), $_SERVER["SCRIPT_NAME"]);
+                FriendController::get_instance()->get_friend_requests($_SESSION["user"]->get_email()), $_SERVER["SCRIPT_NAME"], $_GET["search"] ?? null);
             Display::list_friends_friend_as_html(
-                FriendController::get_instance()->get_friends_friends($_SESSION["user"]->get_email()), $_SERVER["SCRIPT_NAME"]);
+                FriendController::get_instance()->get_friends_friends($_SESSION["user"]->get_email()), $_SERVER["SCRIPT_NAME"], $_GET["search"] ?? null);
         ?>
         </div>
         <div class="friend_recommendation_scroll_view">
             <h1>Kersesési találatok</h1>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="button" onclick="location.href='search_friends.php?user=a'" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">fsdf</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div class="recommended_user_btn_name_container">
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div>
-                    <p class="recommended_user_name">fsdf</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
-            <div class="friend_recommendation_card">
-                <img class="recommended_user_img" src="../assets/tmp.png" alt="profilkép" height="100px" width="100px">
-                <div class="recommended_user_btn_name_container">
-                    <p class="recommended_user_name">Ezegynagyonjónévlehethaúgyakarom</p>
-                    <input class="recommended_user_btn" type="submit" value="Jelölés">
-                </div>
-            </div>
+            <?php
+                if(isset($_GET["search"]))
+                {
+                    Display::list_search_results(
+                        FriendController::get_instance()->get_search_results_with_friend_status($_SESSION["user"]->get_email(), $_GET["search"]),
+                        $_SERVER["SCRIPT_NAME"], $_GET["search"] ?? null);
+                }
+            ?>
         </div>
     </div>
 </body>

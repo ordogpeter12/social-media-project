@@ -208,7 +208,7 @@ ul {
 .friend_recommendation_scroll_view {
         padding-top: 10px;
         width: 40%;
-        max-height: 75vh;
+        height: 75vh;
         z-index: 0;
         background-color: yellowgreen;
         padding-left: 30px;

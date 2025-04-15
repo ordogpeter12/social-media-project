@@ -44,4 +44,12 @@ include_once "../dao/user_dao.php";
                 FriendDao::get_instance()->delete_friend($current_user_email, $declined_email);
             }
         }
+        public function get_search_results_with_friend_status(string $current_user_name, $substr) : array
+        {
+            if($substr === null)
+            {
+                return [];
+            }
+            return FriendDao::get_instance()->get_search_results_with_status($current_user_name, $substr);
+        }
     }

@@ -136,4 +136,27 @@ class FriendDao extends DaoBase
         oci_execute($statement);
         oci_free_statement($statement);
     }
+    //null az ismerősi állapot, ha teljesen idegenek
+    public function get_search_results_with_status(string $current_user_email, string $substr) : array
+    {
+        $query = "SELECT  felhasznalok.nev,  felhasznalok.profil_kep_utvonal,  ismerosok.allapot
+                  FROM Felhasznalo felhasznalok
+                  LEFT JOIN Ismeretseg ismerosok
+                  ON (ismerosok.email1 = :current_user_email AND ismerosok.email2 = felhasznalok.email)
+                  OR (ismerosok.email2 = :current_user_email AND ismerosok.email1 = felhasznalok.email)
+                  WHERE felhasznalok.email != :current_user_email
+                  AND (LOWER(felhasznalok.nev) LIKE LOWER('%' || :substr || '%')
+                  OR LOWER(felhasznalok.email) LIKE LOWER('%' || :substr || '%'))";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":current_user_email", $current_user_email);
+        oci_bind_by_name($statement, ":substr", $substr);
+        oci_execute($statement);
+        $returnable_friend_array = [];
+        while($record = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS))
+        {
+            $returnable_friend_array[] = new Friend($record["NEV"], $record["PROFIL_KEP_UTVONAL"], $record["ALLAPOT"]);
+        }
+        oci_free_statement($statement);
+        return $returnable_friend_array;
+    }
 }
