@@ -70,6 +70,18 @@ class Display
             </div>
         </div>";
     }
+    static function requested_card($friend, string $current_file_name, string|null $search_value) : string
+    {
+        return "<div class='friend_recommendation_card'>
+        <img class='recommended_user_img' src='".$friend->get_profile_img_path()."'alt='profilkép' height='100px' width='100px'>
+            <div>
+                <p class='recommended_user_name'>".$friend->get_name(). "</p>
+                <input class='accept_request_btn' type='button' 
+                onclick=\"location.href='".$current_file_name."?derequest=".$friend->get_name().
+                ($search_value !== null ? "&search=".$search_value: "") ."'\" value='Jelölés visszavonása'>
+            </div>
+        </div>";
+    }
     static function list_search_results(array $friend_array, string $current_file_name, string|null $search) : void
     {
         for($i = 0; $i < count($friend_array); $i++)
@@ -78,11 +90,15 @@ class Display
             {
                 echo self::friend_card($friend_array[$i], $current_file_name, $search);
             }
-            else if($friend_array[$i]->get_friend_status() === 'p')
+            else if($friend_array[$i]->get_friend_status() === 'r')
             {
                 echo self::request_card($friend_array[$i], $current_file_name, $search);
             }
-            else
+            else if($friend_array[$i]->get_friend_status() === 'p')
+            {
+                echo self::requested_card($friend_array[$i], $current_file_name, $search);
+            }
+            else if($friend_array[$i]->get_friend_status() === 's')
             {
                 echo self::recommendation_card($friend_array[$i], $current_file_name, $search);
             }

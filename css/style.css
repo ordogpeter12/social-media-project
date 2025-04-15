@@ -234,7 +234,7 @@ ul {
     flex-flow: column;
 }
 .recommended_user_btn {
-    width: 100px !important;
+    width: 130px !important;
     margin-top: 35px !important;
 }
 .btn_div_row {
@@ -242,7 +242,7 @@ ul {
     flex-direction: row;
 }
 .accept_request_btn {
-    width: 100px !important;
+    width: 130px !important;
     margin-top: 35px !important;
     margin-right: 10px !important;
     background-color: orange !important;
@@ -255,7 +255,7 @@ ul {
     color: orange !important;
 }
 .decline_request_btn {
-    width: 100px !important;
+    width: 130px !important;
     margin-top: 35px !important;
     background-color: tomato !important;
     border-color: maroon !important;

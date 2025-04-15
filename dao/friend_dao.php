@@ -139,11 +139,14 @@ class FriendDao extends DaoBase
     //null az ismerősi állapot, ha teljesen idegenek
     public function get_search_results_with_status(string $current_user_email, string $substr) : array
     {
-        $query = "SELECT  felhasznalok.nev,  felhasznalok.profil_kep_utvonal,  ismerosok.allapot
-                  FROM Felhasznalo felhasznalok
+        $query = "SELECT felhasznalok.nev, felhasznalok.profil_kep_utvonal, 
+                  CASE 
+                      WHEN ismerosok.email2 = :current_user_email AND ismerosok.allapot = 'p' THEN 'r'
+                      ELSE ismerosok.allapot
+                  END AS allapot FROM Felhasznalo felhasznalok
                   LEFT JOIN Ismeretseg ismerosok
-                  ON (ismerosok.email1 = :current_user_email AND ismerosok.email2 = felhasznalok.email)
-                  OR (ismerosok.email2 = :current_user_email AND ismerosok.email1 = felhasznalok.email)
+                  ON ((ismerosok.email1 = :current_user_email AND ismerosok.email2 = felhasznalok.email)
+                  OR (ismerosok.email2 = :current_user_email AND ismerosok.email1 = felhasznalok.email))
                   WHERE felhasznalok.email != :current_user_email
                   AND (LOWER(felhasznalok.nev) LIKE LOWER('%' || :substr || '%')
                   OR LOWER(felhasznalok.email) LIKE LOWER('%' || :substr || '%'))";
