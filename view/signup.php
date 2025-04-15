@@ -4,7 +4,7 @@
     include_once "../config/config_variables.php";
     include_once "../dao/user_dao.php";
     session_start();
-    if(array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
+    if(array_key_exists("user", $_SESSION)) { header("Location: profile.php"); die; }
     if(isset($_POST["signup"]))
     {
         $error_messages = UserController::get_instance()->signup($_POST["name"], $_POST["email"], $_POST["birth_date"], $_FILES["image"], $_POST["password"], $_POST["password_again"]);

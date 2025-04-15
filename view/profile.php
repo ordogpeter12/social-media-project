@@ -3,7 +3,7 @@
     include_once "../controller/user_controller.php";
     include_once "common_display.php";
     session_start();
-    if(!array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
+    if(!array_key_exists("user", $_SESSION)) { header("Location: login.php"); die; }
     if(isset($_POST["change"]))
     {
         $error_messages = UserController::get_instance()->update_user($_SESSION["user"], $_POST["email"], $_POST["name"], $_POST["birth_date"], $_POST["password"], $_POST["password_again"], $_POST["old_password"]);
@@ -33,7 +33,7 @@
     <form action="#" method="POST">
         <fieldset class="user_info">
             <legend>Felhasználói adatok</legend>
-            <label>Felhasználónév: <input type="text" name="name" value=<?php echo $_SESSION["user"]->get_name();?> required></label>
+            <label>Felhasználónév: <input type="text" name="name" value='<?php echo $_SESSION["user"]->get_name();?>' required></label>
             <br>
             <label>Email: <input value="<?php echo $_SESSION["user"]->get_email();?>" type="email" name="email" required></label>
             <br>

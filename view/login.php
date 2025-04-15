@@ -5,13 +5,13 @@
     include_once "../controller/user_controller.php";
     include_once "../dao/friend_dao.php";
     FriendDao::get_instance()->get_friends_friends("legobatman2@gmail.com");
-    if(array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
+    if(array_key_exists("user", $_SESSION)) { header("Location: profile.php"); die; }
     if(isset($_POST["login"]))
     {
         /*Sikeres bejelentkezés esetnén a $_SESSION tömben "user" kulccsal elérhető
         a bejelentkezett felhasználó User object-je*/
         $error_messages = UserController::get_instance()->login($_POST["email"], $_POST["password"]);
-        if(!count($error_messages)) { header("Location: profile.php"); }
+        if(!count($error_messages)) { header("Location: profile.php"); die; }
     }
 ?>
 <!DOCTYPE html>

@@ -3,10 +3,18 @@
     include_once "../controller/friend_controller.php";
     include_once "../model/user.php";
     session_start();
-    if(!array_key_exists("user", $_SESSION)) { header("Location: ../index.php"); }
+    if(!array_key_exists("user", $_SESSION)) { header("Location: login.php"); die; }
     if(isset($_GET["request"]))
     {
         FriendController::get_instance()->friend_request($_SESSION["user"]->get_email(), $_GET["request"]);
+    }
+    else if(isset($_GET["accept"]))
+    {
+        FriendController::get_instance()->accept_friend_request($_SESSION["user"]->get_email(), $_GET["accept"]);
+    }
+    else if(isset($_GET["decline"]))
+    {
+        FriendController::get_instance()->decline_friend_request($_SESSION["user"]->get_email(), $_GET["decline"]);
     }
 ?>
 <!DOCTYPE html>
@@ -31,10 +39,14 @@
         <input type="submit" id="search_btn" value="Kereses" name="search">
     </form>
     <div id="main_recommendation">
+        <div class='friend_recommendation_scroll_view'>
         <?php
+            Display::list_friend_requests_as_html(
+                FriendController::get_instance()->get_friend_requests($_SESSION["user"]->get_email()), $_SERVER["SCRIPT_NAME"]);
             Display::list_friends_friend_as_html(
                 FriendController::get_instance()->get_friends_friends($_SESSION["user"]->get_email()), $_SERVER["SCRIPT_NAME"]);
         ?>
+        </div>
         <div class="friend_recommendation_scroll_view">
             <h1>Kersesési találatok</h1>
             <div class="friend_recommendation_card">

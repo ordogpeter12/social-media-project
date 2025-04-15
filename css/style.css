@@ -237,6 +237,35 @@ ul {
     width: 100px !important;
     margin-top: 35px !important;
 }
+.btn_div_row {
+    display: flex;
+    flex-direction: row;
+}
+.accept_request_btn {
+    width: 100px !important;
+    margin-top: 35px !important;
+    margin-right: 10px !important;
+    background-color: orange !important;
+    border-color: darkgoldenrod !important;
+    color: darkgoldenrod !important;
+}
+.accept_request_btn:hover {
+    background-color: darkgoldenrod !important;
+    border-color: orange !important;
+    color: orange !important;
+}
+.decline_request_btn {
+    width: 100px !important;
+    margin-top: 35px !important;
+    background-color: tomato !important;
+    border-color: maroon !important;
+    color: maroon !important;
+}
+.decline_request_btn:hover {
+    background-color: maroon !important;
+    border-color: tomato !important;
+    color: tomato !important;
+}
 .recommended_user_name {
     margin-top: 10px;
     align-self: center;

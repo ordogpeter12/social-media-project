@@ -36,8 +36,8 @@ class UserDao extends DaoBase
     public function get_user_by_email(string $email) : User|null
     {
         $query = "SELECT email, nev, jelszo, szerepkor, profil_kep_utvonal, 
-        to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
-        FROM Felhasznalo WHERE email=:email";
+                  to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
+                  FROM Felhasznalo WHERE email=:email";
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":email", $email);
         oci_execute($statement);
@@ -57,8 +57,8 @@ class UserDao extends DaoBase
     public function get_user_by_name(string $name) : User|null
     {
         $query = "SELECT email, nev, jelszo, szerepkor, profil_kep_utvonal, 
-        to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
-        FROM Felhasznalo WHERE nev=:nev";
+                  to_char(szuletesi_datum,'YYYY-MM-DD') as szuletesi_datum 
+                  FROM Felhasznalo WHERE nev=:nev";
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":nev", $name);
         oci_execute($statement);
