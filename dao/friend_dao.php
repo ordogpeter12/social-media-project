@@ -125,13 +125,69 @@ class FriendDao extends DaoBase
         oci_free_statement($statement);
         return $returnable["EMAIL"] ?? $returnable;
     }
-    //használható kérelmek visszautasítására is
+    public function is_derequestable_and_get_email(string $current_user_email, string $name) : string|null
+    {
+        $query = "SELECT visszavaonando.email
+                  FROM Felhasznalo visszavaonando
+                  WHERE visszavaonando.nev = :declined_name
+                  AND EXISTS (
+                  SELECT 1 FROM Ismeretseg visszavono_ismerosok
+                  WHERE visszavono_ismerosok.email2 = visszavaonando.email
+                  AND visszavono_ismerosok.email1 = :current_user_email
+                  AND visszavono_ismerosok.allapot = 'p')";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":declined_name", $name);
+        oci_bind_by_name($statement, ":current_user_email", $current_user_email);
+        oci_execute($statement);
+        $returnable = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS);
+        oci_free_statement($statement);
+        return $returnable["EMAIL"] ?? $returnable;
+    }
+    public function is_deleteable_and_get_email(string $current_user_email, string $name) : string|null
+    {
+        $query = "SELECT torlendo.email
+                  FROM Felhasznalo torlendo
+                  WHERE torlendo.nev = :deleted_name
+                  AND EXISTS (
+                  SELECT 1 FROM Ismeretseg torlo
+                  WHERE ((torlo.email2 = torlendo.email AND torlo.email1 = :current_user_email)
+                  OR (torlo.email1 = torlendo.email AND torlo.email2 = :current_user_email))
+                  AND torlo.allapot = 'a')";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":deleted_name", $name);
+        oci_bind_by_name($statement, ":current_user_email", $current_user_email);
+        oci_execute($statement);
+        $returnable = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS);
+        oci_free_statement($statement);
+        return $returnable["EMAIL"] ?? $returnable;
+    }
+    public function decline_friend_request(string $current_user_email, string $declined_user_email) : void
+    {
+        $query = "DELETE FROM Ismeretseg
+                  WHERE email1=:ddeclinable_email AND email2=:current_user_email";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":ddeclinable_email", $declined_user_email);
+        oci_bind_by_name($statement, ":current_user_email", $current_user_email);
+        oci_execute($statement);
+        oci_free_statement($statement);
+    }
+    public function derequest_friend(string $current_user_email, string $derequested_user_email) : void
+    {
+        $query = "DELETE FROM Ismeretseg
+                  WHERE email2=:deleteable_email AND email1=:current_user_email";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":deleteable_email", $derequested_user_email);
+        oci_bind_by_name($statement, ":current_user_email", $current_user_email);
+        oci_execute($statement);
+        oci_free_statement($statement);
+    }
     public function delete_friend(string $current_user_email, string $deleted_user_email) : void
     {
         $query = "DELETE FROM Ismeretseg
-                  WHERE email1=:deleteable_email AND email2=:current_user_email";
+                  WHERE (email2=:deletable_email AND email1=:current_user_email)
+                  OR (email1=:deletable_email AND email2=:current_user_email)";
         $statement = oci_parse(parent::get_connection(), $query);
-        oci_bind_by_name($statement, ":deleteable_email", $deleted_user_email);
+        oci_bind_by_name($statement, ":deletable_email", $deleted_user_email);
         oci_bind_by_name($statement, ":current_user_email", $current_user_email);
         oci_execute($statement);
         oci_free_statement($statement);

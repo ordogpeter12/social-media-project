@@ -16,6 +16,14 @@
     {
         FriendController::get_instance()->decline_friend_request($_SESSION["user"]->get_email(), $_GET["decline"]);
     }
+    else if(isset($_GET["derequest"]))
+    {
+        FriendController::get_instance()->derequest_friend_request($_SESSION["user"]->get_email(), $_GET["derequest"]);
+    }
+    else if(isset($_GET["delete"]))
+    {
+        FriendController::get_instance()->delete_friend($_SESSION["user"]->get_email(), $_GET["delete"]);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
