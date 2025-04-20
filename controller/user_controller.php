@@ -34,9 +34,9 @@
                 {
                     $error_messages[] = "A fájl elfogadott formátumai: .png, .jpg!";
                 }
-                if($image["size"] > 5242880)
+                if($image["size"] > 2097152)
                 {
-                    $error_messages[] = "A fájl maximum 5Mb méretű lehet!";
+                    $error_messages[] = "A fájl maximum 2Mb méretű lehet!";
                 }
                 $file_name = time().".".$file_extension;
                 $save_dir = "../assets/".$_POST["email"];
