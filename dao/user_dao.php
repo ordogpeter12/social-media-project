@@ -15,7 +15,8 @@ class UserDao extends DaoBase
         }
         return self::$instance;
     }
-    public function signup(User $user) : bool
+    //üres string, ha nincs hiba
+    public function signup(User $user) : string
     {
         $query = "INSERT INTO Felhasznalo(nev, email, jelszo, szuletesi_datum, profil_kep_utvonal)
                   VALUES (:name, :email, :password, TO_DATE(:birth_date, 'yyyy-mm-dd'), :img_path)";
@@ -24,14 +25,25 @@ class UserDao extends DaoBase
         $email = $user->get_email();
         $password = $user->get_hashed_password();
         $birthday = $user->get_birthday()->format("Y-m-d");
+        $img_path = $user->get_profile_img_path();
         oci_bind_by_name($statement, ":name", $username);
         oci_bind_by_name($statement, ":email", $email);
         oci_bind_by_name($statement, ":password", $password);
         oci_bind_by_name($statement, ":birth_date", $birthday);
-        oci_bind_by_name($statement, ":img_path", $user->get_profile_img_path());
-        $is_success = oci_execute($statement);
+        oci_bind_by_name($statement, ":img_path", $img_path);
+        $returnable_string = "";
+        if(!@oci_execute($statement))
+        {
+            $error = oci_error($statement);
+            if($error["code"] == 20777)
+                $returnable_string = "A felhasználónév tiltott kifejezést tartalmaz!";
+            else if($error["code"] == 20778)
+                $returnable_string = "A felhasználónév több tiltott szót is tartalmaz!";
+            else
+                $returnable_string = "A regisztráció sikertelen ismeretlen okokból!";
+        }
         oci_free_statement($statement);
-        return $is_success;
+        return $returnable_string;
     }
     public function get_user_by_email(string $email) : User|null
     {
@@ -104,7 +116,7 @@ class UserDao extends DaoBase
         oci_free_statement($statement);
         return $returnable_bool;
     }
-    public function update_user(string $old_email, string $email, string $name, string $birthday, string $img_path, string $hashed_password) : bool
+    public function update_user(string $old_email, string $email, string $name, string $birthday, string $img_path, string $hashed_password) : string
     {
         $query = "UPDATE Felhasznalo 
                   SET email=:email, nev=:name, szuletesi_datum=TO_DATE(:birth_date, 'yyyy-mm-dd'), jelszo=:password, profil_kep_utvonal=:path  
@@ -116,9 +128,19 @@ class UserDao extends DaoBase
         oci_bind_by_name($statement, ":birth_date", $birthday);
         oci_bind_by_name($statement, ":password", $hashed_password);
         oci_bind_by_name($statement, ":old_email", $old_email);
-        $returnable_bool = oci_execute($statement);
+        $returnable_string = "";
+        if(!@oci_execute($statement))
+        {
+            $error = oci_error($statement);
+            if($error["code"] == 20777)
+                $returnable_string = "A felhasználónév tiltott kifejezést tartalmaz!";
+            else if($error["code"] == 20778)
+                $returnable_string = "A felhasználónév több tiltott szót is tartalmaz!";
+            else
+                $returnable_string = "A regisztráció sikertelen ismeretlen okokból!";
+        }
         oci_free_statement($statement);
-        return $returnable_bool;
+        return $returnable_string;
     }
     
 }

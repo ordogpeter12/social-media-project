@@ -44,9 +44,10 @@
             if(count($error_messages) === 0)
             {
                 $saveable_path = $file_name !== "" ? $save_dir."/".$file_name: "";
-                if(!UserDao::get_instance()->signup(new User($username, $email, password_hash($password, PASSWORD_DEFAULT), "u", new DateTime($birth_date), $saveable_path)))
+                $error = UserDao::get_instance()->signup(new User($username, $email, password_hash($password, PASSWORD_DEFAULT), "u", new DateTime($birth_date), $saveable_path));
+                if($error !== "")
                 {
-                    $error_messages[] = "A regisztráció ismeretlen okoból nem sikerült. Próbáld újra!";
+                    $error_messages[] = $error;
                 }
                 else
                 {
@@ -133,9 +134,10 @@
             if(!$this->validate_date($birthday)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
             if(count($error_messages) === 0)
             {
-                if(!UserDao::get_instance()->update_user($user->get_email(), $email, $name, $birthday, $this->replace_dir_name($user->get_profile_img_path(), $email), password_hash($password, PASSWORD_DEFAULT)))
+                $error = UserDao::get_instance()->update_user($user->get_email(), $email, $name, $birthday, $this->replace_dir_name($user->get_profile_img_path(), $email), password_hash($password, PASSWORD_DEFAULT));
+                if($error !== "")
                 {
-                    return ["A felhasználói adatok módosítása ismeretlen okokból nem sikerült!"];
+                    $error_messages[] = $error;
                 }
                 else if($email !== $user->get_email())
                 {
