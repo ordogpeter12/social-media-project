@@ -39,7 +39,10 @@
             <ul>
             <li class="left_nav"><div class="nav_div" id="nav_current"><p>Ismerősök keresése</p></div></li>
             <li class="right_nav"><a href="profile.php" class="nav_link"><div class="nav_div"><p>Profil</p></div></a></li>
-            <li class="right_nav"><a href="admin.php" class="nav_link"><div class="nav_div"><p>Admin</p></div></a></li>
+            <?php
+                if($_SESSION["user"]->get_role() === 'a')
+                    echo '<li class="right_nav"><a href="admin.php" class="nav_link"><div class="nav_div"><p>Admin</p></div></a></li>';
+            ?>
             </ul>
         </nav>
     </header>

@@ -1,9 +1,9 @@
 <?php
-session_start();
 include_once "../model/user.php";
 include_once "../controller/admin_controller.php";
 include_once "common_display.php";
-if(!array_key_exists("user", $_SESSION) && $_SESSION["user"]->get_role() !== 'a') { header("Location: index.php"); die; }
+session_start();
+if(!array_key_exists("user", $_SESSION) || $_SESSION["user"]->get_role() !== "a") { header("Location: ../index.php"); die; }
 if(isset($_GET["word"]))
 {
     $error_messages = AdminController::get_instance()->add_disallowed_word($_GET["word"]);
