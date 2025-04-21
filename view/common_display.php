@@ -138,7 +138,7 @@ class Display
     }
     static function print_own_bubble(string $message) : void
     {
-        echo "<div class='general_message_bubble other_message_bubble'>".
+        echo "<div class='general_message_bubble own_message_bubble'>".
         $message."</div>";
     }
     static function print_others_bubble(string $message, string $img_path) : void
