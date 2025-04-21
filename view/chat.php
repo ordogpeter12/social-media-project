@@ -6,6 +6,10 @@
     include_once "../controller/chat_controller.php";
     session_start();
     if(!array_key_exists("user", $_SESSION)) { header("Location: login.php"); die; }
+    if(isset($_POST["send"]) && isset($_POST["new_message"]) && isset($_GET["user"]))
+    {
+        $error_masseges = ChatController::get_instance()->send_message($_SESSION["user"]->get_email(), $_GET["user"], $_POST["new_message"]);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="hu">
@@ -37,6 +41,13 @@
             }
         ?>
     </div>
+    <?php
+        if(isset($error_messages) && count($error_masseges) !== 0)
+        {
+            //TODO
+            echo "<p>TMP ERROR</p>"
+        }
+    ?>
     <form action="#" method="POST" id="chat_form">
         <input type="text" name="new_message" id="message_input" autocomplete="off">
         <input type="submit" id="send_btn" value="Küldés" name="send">

@@ -218,4 +218,22 @@ class FriendDao extends DaoBase
         oci_free_statement($statement);
         return $returnable_friend_array;
     }
+    public function are_friends(string $current_email, string $other_name) : string|null
+    {
+        $query = "SELECT felhasznalo.email FROM
+                  (SELECT * FROM felhasznalo WHERE nev=:name) felhasznalo
+                  JOIN ismeretseg ismereteseg 
+                  ON (ismereteseg.email1 = felhasznalo.email OR ismereteseg.email2 = felhasznalo.email)
+                  WHERE (ismereteseg.email1 = :email OR ismereteseg.email2 = :email)
+                  AND ismereteseg.allapot='a'";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":email", $current_email);
+        oci_bind_by_name($statement, ":name", $other_name);
+        oci_execute($statement);
+        $returnable = null;
+        if($user = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS))
+            $returnable = $user["EMAIL"];
+        oci_free_statement($statement);
+        return $returnable;
+    }
 }

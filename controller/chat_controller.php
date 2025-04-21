@@ -3,6 +3,7 @@ include_once "../dao/chat_dao.php";
 include_once "../model/chat_info.php";
 include_once "../model/whole_chat.php";
 include_once "../model/message.php";
+include_once "../dao/friend_dao.php";
 class ChatController
 {
     private static ChatController $instance;
@@ -27,5 +28,22 @@ class ChatController
             return ChatDao::get_instance()->get_messages($current_email, $other_username);
         }
         return null;
+    }
+    public function send_message($current_email, $name, $content) : array
+    {
+        $error_masseges = [];
+        if($name !== null || $name != "" || $content !== null || trim($content) !== "")
+        {
+            $other_user_email = FriendDao::get_instance()->are_friends($current_email, $name);
+            if($other_user_email !== null)
+            {
+                ChatDao::get_instance()->send_message($current_email, $other_user_email, $content);
+            }
+            else
+            {
+                $error_masseges[] = "Nem küldhetsz üzenetet ennek a felhasznalónak";
+            }
+        }
+        return $error_masseges;
     }
 }

@@ -71,4 +71,15 @@ class ChatDao extends DaoBase
         oci_free_statement($statement);
         return $returnable;
     }
+    public function send_message(string $current_email, string $other_email, string $tartalom) : void
+    {
+        $query = "INSERT INTO uzenet(email, cimzett, tartalom)
+                  VALUES(:sender, :address, :content)";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":sender", $current_email);
+        oci_bind_by_name($statement, ":address", $other_email);
+        oci_bind_by_name($statement, ":content", $tartalom);
+        oci_execute($statement);
+        oci_free_statement($statement);
+    }
 }
