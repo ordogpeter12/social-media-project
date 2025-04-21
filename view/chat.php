@@ -1,7 +1,9 @@
 <?php
     include_once "common_display.php";
-    include_once "../controller/friend_controller.php";
     include_once "../model/user.php";
+    include_once "../model/whole_chat.php";
+    include_once "../model/message.php";
+    include_once "../controller/chat_controller.php";
     session_start();
     if(!array_key_exists("user", $_SESSION)) { header("Location: login.php"); die; }
 ?>
@@ -28,19 +30,15 @@
         </nav>
     </header>
     <div id="chat_field">
-        <div class="general_message_buble own_message_bubble">Ez egy üzenet</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
-        <div class="general_message_buble own_message_bubble">Ez egy üzenet</div>
-        <div class="general_message_buble own_message_bubble">Ez egy üzenet</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
-        <div class="general_message_buble other_message_bubble">Ez is egy üzenet, de nem az enyém</div>
+        <?php
+            if(isset($_GET["user"]) && $chat = ChatController::get_instance()->get_messages($_SESSION["user"]->get_email(), $_GET["user"]))
+            {
+                Display::display_chat_bubbles($chat);
+            }
+        ?>
     </div>
     <form action="#" method="POST" id="chat_form">
-        <input type="text" name="new_message" id="message_input">
+        <input type="text" name="new_message" id="message_input" autocomplete="off">
         <input type="submit" id="send_btn" value="Küldés" name="send">
     </form>
 </body>

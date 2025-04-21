@@ -33,7 +33,7 @@ class User
     public function set_birthday(DateTime $birthday) : void { $this->birthday = $birthday; }
     public function set_profile_img_path(string $profile_img_path) : void { $this->profile_img_path = $profile_img_path; }
 
-    public function to_string() : string
+    public function __toString() : string
     {
         return "Name: ".$this->name.
                 "\nEmail: ".$this->email.

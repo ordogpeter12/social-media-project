@@ -117,6 +117,37 @@ class Display
             </a>";
         }
     }
+    static function display_chat_bubbles(Chat $chat) : void
+    {
+        $other_sended_prev_message = false;
+        $messages = $chat->get_messages();
+        for($i = 0; $i < count($messages); $i++)
+        {
+            if($messages[$i]->is_sender())
+            {
+                self::print_own_bubble($messages[$i]->get_content());
+                $other_sended_prev_message = false;
+            }
+            else
+            {
+                self::print_others_bubble($messages[$i]->get_content(),
+                $other_sended_prev_message ? "": $chat->get_profile_img_path());
+                $other_sended_prev_message = true;
+            }
+        }
+    }
+    static function print_own_bubble(string $message) : void
+    {
+        echo "<div class='general_message_bubble other_message_bubble'>".
+        $message."</div>";
+    }
+    static function print_others_bubble(string $message, string $img_path) : void
+    {
+        echo "<div class='img_bubble_wrapper'>".
+            ($img_path === "" ? "<div class='chat_img'></div>": "<img src='".$img_path."' alt='Profil kép' class='chat_img'>")
+            ."<div class='general_message_bubble other_message_bubble'>".
+            $message."</div></div>";
+    }
 }
 
 ?>

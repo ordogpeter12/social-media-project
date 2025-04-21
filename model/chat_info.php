@@ -18,7 +18,7 @@ class ChatInfo
     public function set_profile_img_path(string $profile_img_path) : void { $this->profile_img_path = $profile_img_path; }
     public function set_last_message(string $last_message) : void { $this->last_message = $last_message; }
 
-    public function to_string() : string
+    public function __toString() : string
     {
         return "Name: ".$this->name.
                 "\nImage path: ".$this->profile_img_path.
