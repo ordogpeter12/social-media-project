@@ -104,6 +104,19 @@ class Display
             }
         }
     }
+    static function existing_chats(array $chats) : void
+    {
+        for($i = 0; $i < count($chats); $i++)
+        {
+            echo "<a href='chat.php?user=".$chats[$i]->get_name()."' class='chat_anchor'>
+                <img src='".$chats[$i]->get_profile_img_path()."' alt='Profil kép' height='70px' width='70px'>
+                <div class='last_message_name_wrapper'>
+                    <div class='messages_name'>".$chats[$i]->get_name()."</div>
+                    <div class='messages_last_message'>".$chats[$i]->get_last_message()."</div>
+                </div>
+            </a>";
+        }
+    }
 }
 
 ?>

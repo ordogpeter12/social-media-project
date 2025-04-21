@@ -26,6 +26,7 @@
         <nav>
             <ul>
                 <li class="left_nav"><a href="search_friends.php" class="nav_link"><div class="nav_div"><p>Ismerősök keresése</p></div></a></li>
+                <li class="left_nav"><a href="conversations.php" class="nav_link"><div class="nav_div"><p>Beszélgetések</p></div></a></li>
                 <li class="right_nav"><div class="nav_div" id="nav_current"><p>Profil</p></div></li>
                 <?php
                     if($_SESSION["user"]->get_role() === 'a')

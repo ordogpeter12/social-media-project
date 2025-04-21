@@ -284,3 +284,46 @@ label[for="image"] {
     cursor: pointer;
     padding: 5px;
 }
+.chat_anchor {
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+    margin: 0px 35px;
+    background-color: yellowgreen;
+    border-style: solid;
+    border-color: green;
+    border-width: 2px 4px;
+    border-radius: 5px;
+}
+.chat_anchor:first-of-type {
+    border-top: 4px solid green;
+}
+.chat_anchor:last-of-type {
+    border-bottom: 4px solid green;
+    margin-bottom: 20px;
+}
+.chat_anchor:hover {
+    margin: 0px 15px;
+    background-color: green;
+}
+.last_message_name_wrapper {
+    margin-left: 10px;
+    align-self: center;
+}
+.messages_name {
+    font-size: larger;
+    color: darkgreen;
+    font-weight: 600;
+}
+.messages_last_message {
+    color: whitesmoke;
+    font-style: italic;
+    text-shadow: 3px 3px 5px green;
+}
+.chat_anchor:hover .last_message_name_wrapper .messages_last_message {
+    text-shadow: 3px 3px 5px yellowgreen;
+}
+.chat_anchor:hover .last_message_name_wrapper .messages_name {
+    color: yellowgreen;
+    -webkit-text-stroke: 1px whitesmoke;
+}
