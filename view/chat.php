@@ -45,7 +45,7 @@
         if(isset($error_messages) && count($error_masseges) !== 0)
         {
             //TODO
-            echo "<p>TMP ERROR</p>"
+            echo "<p>TMP ERROR</p>";
         }
     ?>
     <form action="#" method="POST" id="chat_form">
