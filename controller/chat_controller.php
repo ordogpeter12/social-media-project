@@ -41,7 +41,7 @@ class ChatController
             }
             else
             {
-                $error_masseges[] = "Nem küldhetsz üzenetet ennek a felhasznalónak";
+                $error_masseges[] = "Nem küldhetsz üzenetet ennek a felhasznalónak!";
             }
         }
         return $error_masseges;

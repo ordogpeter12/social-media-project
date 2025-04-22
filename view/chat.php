@@ -41,15 +41,14 @@
             }
         ?>
     </div>
-    <?php
-        if(isset($error_messages) && count($error_masseges) !== 0)
-        {
-            //TODO
-            echo "<p>TMP ERROR</p>";
-        }
-    ?>
     <form action="#" method="POST" id="chat_form">
-        <input type="text" name="new_message" id="message_input" autocomplete="off">
+        <input type="text" name="new_message" id="message_input" autocomplete="off" 
+        <?php
+            if(isset($error_masseges))
+            {
+                echo "placeholder=\"".$error_masseges[0]."\"";
+            }
+        ?>>
         <input type="submit" id="send_btn" value="Küldés" name="send">
     </form>
 </body>
