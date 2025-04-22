@@ -66,4 +66,12 @@ include_once "../dao/user_dao.php";
             }
             return FriendDao::get_instance()->get_search_results_with_status($current_user_name, $substr);
         }
+        public function search_accepted_friends(string $current_user_name, $substr) : array
+        {
+            if($substr === null)
+            {
+                return [];
+            }
+            return FriendDao::get_instance()->get_searched_friends($current_user_name, $substr);
+        }
     }

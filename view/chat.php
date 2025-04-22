@@ -44,7 +44,7 @@
     <form action="#" method="POST" id="chat_form">
         <input type="text" name="new_message" id="message_input" autocomplete="off" 
         <?php
-            if(isset($error_masseges))
+            if(isset($error_masseges) && count($error_masseges) !== 0)
             {
                 echo "placeholder=\"".$error_masseges[0]."\"";
             }

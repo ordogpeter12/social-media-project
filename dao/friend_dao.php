@@ -1,6 +1,7 @@
 <?php
 include_once "dao_base.php";
 include_once "../model/friend.php";
+include_once "../model/chat_info.php";
 class FriendDao extends DaoBase
 {
     private static $instance;
@@ -204,8 +205,7 @@ class FriendDao extends DaoBase
                   ON ((ismerosok.email1 = :current_user_email AND ismerosok.email2 = felhasznalok.email)
                   OR (ismerosok.email2 = :current_user_email AND ismerosok.email1 = felhasznalok.email))
                   WHERE felhasznalok.email != :current_user_email
-                  AND (LOWER(felhasznalok.nev) LIKE LOWER('%' || :substr || '%')
-                  OR LOWER(felhasznalok.email) LIKE LOWER('%' || :substr || '%'))";
+                  AND LOWER(felhasznalok.nev) LIKE LOWER('%' || :substr || '%')";
         $statement = oci_parse(parent::get_connection(), $query);
         oci_bind_by_name($statement, ":current_user_email", $current_user_email);
         oci_bind_by_name($statement, ":substr", $substr);
@@ -235,5 +235,26 @@ class FriendDao extends DaoBase
             $returnable = $user["EMAIL"];
         oci_free_statement($statement);
         return $returnable;
+    }
+    public function get_searched_friends(string $current_user_email, string $substr) : array
+    {
+        $query = "SELECT felhasznalok.nev, felhasznalok.profil_kep_utvonal
+                  FROM (SELECT * FROM ismeretseg
+                  WHERE (email1=:email OR email2=:email) AND allapot='a') ismerosok
+                  JOIN (SELECT nev, email, profil_kep_utvonal FROM felhasznalo 
+                  WHERE email<>:email AND LOWER(nev) LIKE LOWER('%' || :substr || '%')) felhasznalok
+                  ON (ismerosok.email1=felhasznalok.email OR ismerosok.email2=felhasznalok.email)
+                  ORDER BY felhasznalok.nev";
+        $statement = oci_parse(parent::get_connection(), $query);
+        oci_bind_by_name($statement, ":email", $current_user_email);
+        oci_bind_by_name($statement, ":substr", $substr);
+        oci_execute($statement);
+        $returnable_chat_array = [];
+        while($record = oci_fetch_array($statement, OCI_ASSOC+OCI_RETURN_NULLS))
+        {
+            $returnable_chat_array[] = new ChatInfo($record["NEV"], $record["PROFIL_KEP_UTVONAL"]);
+        }
+        oci_free_statement($statement);
+        return $returnable_chat_array;
     }
 }
