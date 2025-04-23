@@ -28,7 +28,7 @@
             if($password !== $password_again) { $error_messages[] = "A két jelszó nem egyezik!"; }
             if(!$this->validate_date($birth_date)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
             $file_name = "";
-            $save_dir = "";
+            $save_dir = "../assets/".$email;
             if(!empty($image["name"]))
             {
                 $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));;
@@ -41,7 +41,6 @@
                     $error_messages[] = "A fájl maximum 2Mb méretű lehet!";
                 }
                 $file_name = time().".".$file_extension;
-                $save_dir = "../assets/".$_POST["email"];
             }
             if(count($error_messages) === 0)
             {
