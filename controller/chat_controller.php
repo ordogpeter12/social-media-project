@@ -34,14 +34,21 @@ class ChatController
         $error_masseges = [];
         if($name !== null || $name != "" || $content !== null || trim($content) !== "")
         {
-            $other_user_email = FriendDao::get_instance()->are_friends($current_email, $name);
-            if($other_user_email !== null)
+            if(strlen($content) <= 10)
             {
-                ChatDao::get_instance()->send_message($current_email, $other_user_email, $content);
+                $other_user_email = FriendDao::get_instance()->are_friends($current_email, $name);
+                if($other_user_email !== null)
+                {
+                    ChatDao::get_instance()->send_message($current_email, $other_user_email, $content);
+                }
+                else
+                {
+                    $error_masseges[] = "Nem küldhetsz üzenetet ennek a felhasznalónak!";
+                }
             }
             else
             {
-                $error_masseges[] = "Nem küldhetsz üzenetet ennek a felhasznalónak!";
+                $error_masseges[] = "Az üzenet maximum 1024 karakter hosszú lehet";
             }
         }
         return $error_masseges;

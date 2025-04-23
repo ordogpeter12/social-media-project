@@ -19,9 +19,11 @@
         {
             $error_messages = [];
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) { $error_messages[] = "Adj meg egy érvényes email címet!"; }
+            else if(strlen($email) > 255) {$error_messages[] = "Az email túl hosszú!(max 255 karakter)"; }
             if(UserDao::get_instance()->does_username_exist($username)) { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
             if(UserDao::get_instance()->does_user_email_exist($email)) { $error_messages[] = "Ez az email cím már használatban van!"; }
-            if(empty($username) || trim($username) === "") { $error_messages[] = "Adj meg egy felhasználónevet!"; }//
+            if(empty($username) || trim($username) === "") { $error_messages[] = "Adj meg egy felhasználónevet!"; }
+            if(strlen($username) > 255) { $error_messages[] = "A felhasznlónév 255 karkternél rövidebb kell, hogy legyen!"; }
             if(empty($password) || trim($password) === "") { $error_messages[] = "Adj meg egy jelszót!"; }
             if($password !== $password_again) { $error_messages[] = "A két jelszó nem egyezik!"; }
             if(!$this->validate_date($birth_date)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
@@ -116,11 +118,13 @@
             {
                 if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL))
                 { $error_messages[] = "Adj meg egy érvényes email címet!"; }
+                else if(strlen($email) > 255) {$error_messages[] = "Az email túl hosszú!(max 255 karakter)"; }
                 else if(UserDao::get_instance()->does_user_email_exist($email))
                 { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
             }
             if(empty($name) || trim($name) === "")
             { $error_messages[] = "Adj meg egy új nevet, vagy hagyd meg a régit!"; }
+            else if(strlen($name) > 255) { $error_messages[] = "A felhasznlónév 255 karkternél rövidebb kell, hogy legyen!"; } 
             else if($name !== $user->get_name())
             {
                 if(UserDao::get_instance()->does_username_exist($name)) { $error_messages[] = "Ez a felhasználónév már foglalt!"; }
@@ -154,6 +158,21 @@
             $path_array = explode("/", $old_path);
             return "../assets/".$new_email."/".end($path_array);
         }
+        private function delete_dir(string $dir) : void
+        {
+            if (!is_dir($dir))
+                unlink($dir);
+            $items = scandir($dir);
+            foreach($items as $item)
+            {
+                if($item !== '.' && $item !== '..')
+                {
+                    $path = $dir . DIRECTORY_SEPARATOR . $item;
+                    unlink($path);
+                }
+            }
+            rmdir($dir);
+        }
         public function delete_user(string $email, string $name, string $birthday, string $password, string $old_email, string $old_password) : array
         {
             $error_messages = [];
@@ -169,6 +188,8 @@
             {
                 if(UserDao::get_instance()->delete_user($old_email))
                 {
+                    if($_SESSION["user"]->get_profile_img_path() !== "../assets/default.png")
+                        $this->delete_dir($_SESSION["user"]->get_profile_img_path());
                     header("Location: logout.php");
                     die;
                 }

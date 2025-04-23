@@ -64,10 +64,6 @@ nav img {
     float: left;
     height: 50px;
 }
-.user_info {
-    text-align: center;
-    border: none;
-}
 
 
 input[type="text"], [type="password"], [type="email"], label > [type="number"] {
@@ -143,6 +139,7 @@ legend {
     padding-bottom: 5px;
     text-align: center;
     margin-bottom: 50px;
+    text-align: center;
 }
 form {
     text-align: center;
