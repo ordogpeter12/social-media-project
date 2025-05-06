@@ -34,7 +34,7 @@ class ChatController
         $error_masseges = [];
         if($name !== null || $name != "" || $content !== null || trim($content) !== "")
         {
-            if(strlen($content) <= 10)
+            if(strlen($content) <= 1024)
             {
                 $other_user_email = FriendDao::get_instance()->are_friends($current_email, $name);
                 if($other_user_email !== null)

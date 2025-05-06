@@ -61,7 +61,7 @@
         ?>
         </div>
         <div class="friend_recommendation_scroll_view">
-            <h1>Kersesési találatok</h1>
+            <h1>Keresési találatok</h1>
             <?php
                 if(isset($_GET["search"]))
                 {
