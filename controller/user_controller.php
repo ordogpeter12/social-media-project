@@ -29,14 +29,14 @@
             if(!$this->validate_date($birth_date)) { $error_messages[] = "A dátum formátuma legyen 'éééé-hh-nn'!"; }
             $file_name = "";
             $save_dir = "../assets/".$email;
-            if(!empty($image["name"]))
+            if(!empty($image["tmp_name"]))
             {
                 $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));;
                 if($file_extension !== "png" && $file_extension !== "jpg")
                 {
                     $error_messages[] = "A fájl elfogadott formátumai: .png, .jpg!";
                 }
-                if($image["size"] > 2097152)
+                if($image["size"] > 2097152 || $image["size"] == 0)
                 {
                     $error_messages[] = "A fájl maximum 2Mb méretű lehet!";
                 }
