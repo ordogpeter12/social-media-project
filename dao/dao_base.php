@@ -13,15 +13,7 @@ abstract class DaoBase
     {
         if(!isset(self::$connection))
         {
-            $tns = "(DESCRIPTION =
-                    (ADDRESS_LIST =
-                    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
-                    )
-                    (CONNECT_DATA =
-                    (SID = orania2)
-                    )
-                )";
-            self::$connection = oci_connect(DataBaseCredentials::$DB_USERNAME, DataBaseCredentials::$DB_PASSWORD, $tns,'UTF8');
+            self::$connection = oci_connect(DataBaseCredentials::DB_USERNAME, DataBaseCredentials::DB_PASSWORD, DataBaseCredentials::TNS,'UTF8');
             if(!self::$connection)
             {
                 die("Nem sikerült csatlakozni az adatbázishoz!");
